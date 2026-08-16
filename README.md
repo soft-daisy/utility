@@ -26,7 +26,7 @@ The optimizer contains different options for different hardware and Windows conf
 
 🖥️ Designed for older PCs
 
-NGT Windows Optimizer was made with low-end hardware in mind.
+This Windows Optimizer was made with low-end hardware in mind.
 
 It has been developed and tested on an older AMD E-450 system, so the goal isn't to throw unnecessary features into the optimizer — it's to make Windows feel lighter and more responsive.
 
