@@ -77,10 +77,12 @@ I am not responsible for data loss, system instability, broken Windows component
 
 Always keep a backup of important files before modifying your system.
 
----
-
-Windows Optimizer
-
+Hi Optimizer
 Made for people who want their Windows PC to feel lighter, faster, and less cluttered.
-
 ⭐ If you find it useful, consider giving the repository a star.
+
+License
+Copyright © 2026 Taqi Abbas.
+All rights reserved.
+You can use Hi Optimizer for personal use. 
+
