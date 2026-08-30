@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hi+OPTIMIZER — Windows tuned like a terminal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#05070599;
+    --bg-solid:#050705;
+    --bg2:#0a0f0a;
+    --panel:#0d130df2;
+    --line: rgba(57,255,106,.18);
+    --line-strong: rgba(57,255,106,.4);
+    --green:#39ff6a;
+    --green-dim:#1c8a3d;
+    --green-soft: rgba(57,255,106,.12);
+    --cyan:#5fe3ea;
+    --blue:#6f8dff;
+    --gold:#d9ac3d;
+    --khaki:#e8dfa0;
+    --silver:#d7dcd6;
+    --white:#eef4ee;
+    --muted:#7c9583;
+    --red:#ff5c5c;
+    --font-display:'Press Start 2P', monospace;
+    --font-mono:'IBM Plex Mono', 'Space Mono', monospace;
+    --font-body:'Space Mono', monospace;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg-solid);
+    color:var(--white);
+    font-family:var(--font-body);
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  ::selection{ background:var(--green); color:#05070f; }
+
+  /* ---------- CRT overlay ---------- */
+  .crt{
+    pointer-events:none;
+    position:fixed; inset:0; z-index:60;
+    background:
+      repeating-linear-gradient(
+        to bottom,
+        rgba(0,0,0,0) 0px,
+        rgba(0,0,0,0) 2px,
+        rgba(0,0,0,.14) 3px,
+        rgba(0,0,0,0) 4px
+      );
+    mix-blend-mode:multiply;
+    opacity:.5;
+  }
+  .vignette{
+    pointer-events:none;
+    position:fixed; inset:0; z-index:59;
+    box-shadow: inset 0 0 18vw 2vw rgba(0,0,0,.65);
+  }
+
+  a{color:inherit;}
+
+  /* ---------- Boot sequence ---------- */
+  #boot{
+    position:fixed; inset:0; z-index:100;
+    background:#000; color:var(--green);
+    font-family:var(--font-mono);
+    padding:8vh 6vw;
+    font-size:14px;
+    white-space:pre-wrap;
+  }
+  #boot .line{opacity:0; animation:bootline .18s forwards;}
+  @keyframes bootline{ to{opacity:1;} }
+  #boot.hide{ animation: bootout .5s forwards; }
+  @keyframes bootout{ to{ opacity:0; visibility:hidden; } }
+
+  @media (prefers-reduced-motion: reduce){
+    #boot{ display:none; }
+  }
+
+  /* ---------- Layout helpers ---------- */
+  .wrap{ max-width:1180px; margin:0 auto; padding:0 28px; }
+  section{ position:relative; }
+
+  /* Ambient scanline backdrop tint per section via data attr */
+  .bg-fade{
+    position:absolute; inset:0; z-index:-1;
+    background:
+      radial-gradient(1100px 500px at 15% -10%, rgba(57,255,106,.05), transparent 60%),
+      radial-gradient(900px 500px at 90% 10%, rgba(95,227,234,.04), transparent 55%);
+  }
+
+  /* ---------- Header ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background: rgba(5,7,5,.86);
+    backdrop-filter: blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 28px;
+    max-width:1180px; margin:0 auto;
+  }
+  .brand{
+    display:flex; align-items:center; gap:10px;
+    font-family:var(--font-mono); font-weight:700; letter-spacing:.03em;
+    font-size:15px; text-decoration:none; color:var(--white);
+  }
+  .brand .plus{ color:var(--green); text-shadow:0 0 8px rgba(57,255,106,.6); }
+  .brand .dot{ width:8px;height:8px;border-radius:50%; background:var(--green); box-shadow:0 0 8px var(--green); animation:blink 1.6s steps(1) infinite; }
+  @keyframes blink{ 50%{ opacity:.15; } }
+
+  nav.links{ display:flex; gap:28px; align-items:center; }
+  nav.links a{
+    font-size:12.5px; text-decoration:none; color:var(--muted);
+    letter-spacing:.04em; text-transform:uppercase;
+    border-bottom:1px solid transparent;
+    padding-bottom:2px;
+    transition:color .15s, border-color .15s;
+  }
+  nav.links a:hover{ color:var(--green); border-color:var(--line-strong); }
+
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:var(--font-mono); font-size:12.5px; letter-spacing:.03em;
+    padding:10px 18px;
+    border:1px solid var(--line-strong);
+    background:transparent; color:var(--green);
+    text-decoration:none; cursor:pointer;
+    text-transform:uppercase;
+    transition:background .15s, color .15s, box-shadow .15s;
+  }
+  .btn:hover{ background:var(--green); color:#04140a; box-shadow:0 0 22px rgba(57,255,106,.35); }
+  .btn.solid{ background:var(--green); color:#04140a; }
+  .btn.solid:hover{ background:#5cff8a; }
+  .btn.gold{ border-color: rgba(217,172,61,.6); color:var(--gold); }
+  .btn.gold:hover{ background:var(--gold); color:#1a1204; box-shadow:0 0 22px rgba(217,172,61,.35); }
+  .btn.small{ padding:7px 12px; font-size:11px; }
+
+  /* ---------- Terminal window chrome ---------- */
+  .term{
+    border:1px solid var(--line-strong);
+    background: var(--panel);
+    box-shadow: 0 0 0 1px rgba(0,0,0,.4), 0 30px 80px -30px rgba(57,255,106,.15);
+  }
+  .term-bar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:8px 12px;
+    background:#0b100b;
+    border-bottom:1px solid var(--line);
+    font-family:var(--font-mono); font-size:11.5px; color:#9db89e;
+  }
+  .term-bar .dots{ display:flex; gap:6px; }
+  .term-bar .dots span{ width:10px; height:10px; border-radius:50%; background:#1c261c; border:1px solid #2c3a2c; }
+  .term-body{ padding:34px 30px; }
+
+  /* ---------- Hero ---------- */
+  .hero{ padding:64px 0 40px; }
+  .hero-title{
+    font-family:var(--font-display);
+    line-height:1.35;
+    font-size:clamp(26px, 5vw, 52px);
+    color:var(--green);
+    text-shadow:
+      2px 2px 0 #0a3618,
+      0 0 26px rgba(57,255,106,.35);
+    margin:0;
+  }
+  .hero-title .plus{ color:#7dffa4; }
+  .hero-sub{
+    font-family:var(--font-mono); color:var(--muted); font-size:13px;
+    letter-spacing:.02em; margin-top:6px;
+  }
+  .hero-tagbox{
+    display:inline-block; margin:26px 0 22px;
+    border:1px solid var(--line-strong);
+    padding:10px 22px;
+    font-family:var(--font-mono); font-size:12.5px; letter-spacing:.08em;
+    color:var(--green); text-transform:uppercase;
+  }
+  .hero-meta{
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;
+    border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+    padding:10px 0; margin:22px 0;
+    font-family:var(--font-mono); font-size:12px; color:var(--muted);
+  }
+  .hero-meta b{ color:var(--white); font-weight:400; }
+  .hero-prompt{
+    font-family:var(--font-mono); font-size:14px; color:var(--green);
+    margin-top:18px;
+  }
+  .hero-prompt .cursor{
+    display:inline-block; width:9px; height:16px; background:var(--green);
+    margin-left:4px; vertical-align:-3px;
+    animation:blink 1s steps(1) infinite;
+  }
+  .hero-actions{ display:flex; gap:14px; margin-top:30px; flex-wrap:wrap; }
+
+  .hero-note{
+    margin-top:16px; font-size:12px; color:var(--muted); font-family:var(--font-mono);
+  }
+  .hero-note .warn{ color:var(--gold); }
+
+  /* ---------- Interactive menu demo ---------- */
+  .demo-grid{
+    display:grid; grid-template-columns: 1.1fr 1.3fr; gap:0;
+  }
+  @media (max-width:860px){ .demo-grid{ grid-template-columns: 1fr; } }
+
+  .menu-col{ border-right:1px solid var(--line); }
+  @media (max-width:860px){ .menu-col{ border-right:none; border-bottom:1px solid var(--line); } }
+
+  .menu-list{ list-style:none; margin:0; padding:0; }
+  .menu-list li{
+    display:flex; align-items:center; gap:10px;
+    padding:11px 20px;
+    font-family:var(--font-mono); font-size:13.5px;
+    cursor:pointer; color:var(--muted);
+    border-left:2px solid transparent;
+    transition:background .12s, color .12s, border-color .12s;
+  }
+  .menu-list li .num{ color:var(--green-dim); width:26px; flex:none; }
+  .menu-list li:hover{ background:var(--green-soft); color:var(--white); }
+  .menu-list li.active{
+    background:var(--green-soft);
+    color:var(--green);
+    border-left-color:var(--green);
+  }
+  .menu-list li.active .num{ color:var(--green); }
+
+  .output-col{ padding:28px 30px; min-height:340px; }
+  .output-head{
+    font-family:var(--font-display); font-size:15px;
+    letter-spacing:.02em;
+    margin:0 0 14px;
+  }
+  .output-desc{ color:var(--muted); font-size:13.5px; margin-bottom:18px; }
+  .output-log{
+    font-family:var(--font-mono); font-size:12.5px; color:var(--white);
+    background:#040704; border:1px solid var(--line);
+    padding:16px; max-height:220px; overflow:auto;
+  }
+  .output-log div{ margin-bottom:4px; opacity:.92; }
+  .output-log .ok{ color:var(--green); }
+  .output-log .flag{ color:var(--gold); }
+  .tag-row{ display:flex; gap:8px; margin-top:16px; flex-wrap:wrap; }
+  .tag{
+    font-family:var(--font-mono); font-size:10.5px; letter-spacing:.04em;
+    padding:4px 9px; border:1px solid var(--line-strong); color:var(--muted);
+    text-transform:uppercase;
+  }
+
+  /* ---------- Sections generic ---------- */
+  .section{ padding:88px 0; }
+  .eyebrow{
+    font-family:var(--font-mono); font-size:11.5px; letter-spacing:.18em;
+    text-transform:uppercase; color:var(--green-dim); margin-bottom:14px;
+  }
+  h2.sec-title{
+    font-family:var(--font-display); font-size:clamp(20px,3vw,30px);
+    color:var(--white); margin:0 0 18px; line-height:1.5;
+  }
+  .sec-lede{ color:var(--muted); max-width:640px; font-size:14.5px; }
+
+  /* ---------- Feature grid ---------- */
+  .feat-grid{
+    display:grid; grid-template-columns:repeat(3, 1fr); gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+    margin-top:44px;
+  }
+  @media (max-width:860px){ .feat-grid{ grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:560px){ .feat-grid{ grid-template-columns:1fr; } }
+
+  .feat{
+    background:#070b07;
+    padding:26px 22px;
+    border-top:3px solid var(--c, var(--green));
+  }
+  .feat .idx{ font-family:var(--font-mono); font-size:11px; color:var(--muted); }
+  .feat h3{
+    font-family:var(--font-mono); font-size:14.5px; font-weight:700;
+    color:var(--c, var(--green)); margin:8px 0 8px; text-transform:uppercase; letter-spacing:.03em;
+  }
+  .feat p{ font-size:13px; color:var(--muted); margin:0; }
+
+  /* ---------- Safety strip ---------- */
+  .safety{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-top:40px;
+  }
+  @media (max-width:760px){ .safety{ grid-template-columns:1fr; } }
+  .safety-card{
+    border:1px solid var(--line); padding:22px;
+    font-family:var(--font-mono);
+  }
+  .safety-card .k{ color:var(--green); font-size:12px; letter-spacing:.05em; text-transform:uppercase; }
+  .safety-card p{ color:var(--muted); font-size:13px; margin-top:10px; }
+
+  /* ---------- Pricing ---------- */
+  .price-grid{
+    display:grid; grid-template-columns:1fr 1fr; gap:26px; margin-top:44px;
+  }
+  @media (max-width:760px){ .price-grid{ grid-template-columns:1fr; } }
+  .price-card{
+    border:1px solid var(--line-strong);
+    background:#070b07;
+    padding:34px 30px;
+    position:relative;
+    display:flex; flex-direction:column;
+  }
+  .price-card.paid{ border-color: rgba(217,172,61,.55); }
+  .price-card .ribbon{
+    position:absolute; top:0; right:0;
+    font-family:var(--font-mono); font-size:10.5px; letter-spacing:.08em;
+    padding:5px 12px; background:var(--gold); color:#1a1204; text-transform:uppercase;
+  }
+  .price-name{ font-family:var(--font-display); font-size:16px; color:var(--white); margin:0; }
+  .price-tag{ font-family:var(--font-mono); font-size:12px; color:var(--muted); margin-top:8px; }
+  .price-cost{ font-family:var(--font-mono); font-size:38px; margin:22px 0 4px; color:var(--green); }
+  .price-card.paid .price-cost{ color:var(--gold); }
+  .price-cost span{ font-size:14px; color:var(--muted); }
+  .price-list{ list-style:none; padding:0; margin:22px 0 30px; font-size:13.5px; color:var(--white); flex:1; }
+  .price-list li{ display:flex; gap:10px; padding:7px 0; border-top:1px dashed var(--line); }
+  .price-list li:first-child{ border-top:none; }
+  .price-list li .mk{ color:var(--green); flex:none; }
+  .price-card.paid .price-list li .mk{ color:var(--gold); }
+  .price-list li.off{ color:var(--muted); }
+  .price-list li.off .mk{ color:var(--muted); }
+
+  /* ---------- CPU safe/extreme callout ---------- */
+  .callout{
+    margin-top:44px;
+    border:1px solid rgba(111,141,255,.35);
+    background: rgba(111,141,255,.05);
+    padding:22px 26px;
+    display:flex; gap:18px; align-items:flex-start;
+    font-family:var(--font-mono); font-size:13px;
+  }
+  .callout .mark{ color:var(--blue); font-size:18px; }
+  .callout b{ color:var(--blue); }
+
+  /* ---------- FAQ ---------- */
+  .faq{ margin-top:40px; border-top:1px solid var(--line); }
+  .faq-item{ border-bottom:1px solid var(--line); padding:20px 0; }
+  .faq-item summary{
+    cursor:pointer; list-style:none; font-family:var(--font-mono);
+    font-size:14px; color:var(--white); display:flex; justify-content:space-between; align-items:center;
+  }
+  .faq-item summary::-webkit-details-marker{ display:none; }
+  .faq-item summary::after{ content:'+'; color:var(--green); font-size:18px; }
+  .faq-item[open] summary::after{ content:'−'; }
+  .faq-item p{ color:var(--muted); font-size:13.5px; margin:14px 0 0; max-width:680px; }
+
+  /* ---------- Footer ---------- */
+  footer{ border-top:1px solid var(--line); padding:44px 0 60px; }
+  .foot-grid{ display:flex; justify-content:space-between; gap:30px; flex-wrap:wrap; }
+  .foot-brand{ font-family:var(--font-mono); font-size:13px; color:var(--muted); max-width:340px; }
+  .foot-links{ display:flex; gap:44px; flex-wrap:wrap; }
+  .foot-col h4{ font-family:var(--font-mono); font-size:11px; letter-spacing:.08em; color:var(--muted); text-transform:uppercase; margin:0 0 12px; }
+  .foot-col a{ display:block; font-family:var(--font-mono); font-size:12.5px; color:var(--white); text-decoration:none; margin-bottom:9px; opacity:.85; }
+  .foot-col a:hover{ color:var(--green); opacity:1; }
+  .foot-bottom{
+    margin-top:40px; padding-top:20px; border-top:1px solid var(--line);
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;
+    font-family:var(--font-mono); font-size:11px; color:var(--muted);
+  }
+
+  ::-webkit-scrollbar{ width:10px; height:10px; }
+  ::-webkit-scrollbar-track{ background:#050705; }
+  ::-webkit-scrollbar-thumb{ background:#173a20; }
+</style>
+</head>
+<body>
+
+<div id="boot" aria-hidden="true">
+<span class="line" style="animation-delay:.05s">Hi+OPTIMIZER V6 (WEB)</span><br>
+<span class="line" style="animation-delay:.25s">BY SOFT DAISY® 2026</span><br><br>
+<span class="line" style="animation-delay:.55s">loading modules ................ OK</span><br>
+<span class="line" style="animation-delay:.75s">checking registry access ....... OK</span><br>
+<span class="line" style="animation-delay:.95s">preparing restore point ........ SKIPPED (web preview)</span><br>
+</div>
+
+<div class="crt"></div>
+<div class="vignette"></div>
+
+<header>
+  <div class="nav">
+    <a href="#top" class="brand"><span class="plus">Hi+</span>OPTIMIZER <span class="dot"></span></a>
+    <nav class="links">
+      <a href="#modules">Modules</a>
+      <a href="#demo">Try the menu</a>
+      <a href="#safety">Safety</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+      <a href="https://www.tiktok.com/@softdaisy67" target="_blank" rel="noopener">TikTok</a>
+      <a href="https://discord.gg/Dwe9UwzDzS" target="_blank" rel="noopener">Discord</a>
+    </nav>
+    <a href="#pricing" class="btn small">Get Hi+</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="hero">
+    <div class="bg-fade"></div>
+    <div class="wrap">
+      <div class="term">
+        <div class="term-bar">
+          <span>Administrator: Hi+OPTIMIZER V6</span>
+          <div class="dots"><span></span><span></span><span></span></div>
+        </div>
+        <div class="term-body">
+          <p class="hero-title">Hi<span class="plus">+</span>OPTIMIZER</p>
+          <p class="hero-sub">A 12‑module command line for a Windows box that stopped listening to you.</p>
+          <span class="hero-tagbox">V6 · FREE &amp; PAID</span>
+
+          <div class="hero-meta">
+            <span>Made by <b>SOFT DAISY®</b></span>
+            <span>Runtime: <b>.bat, elevated</b></span>
+            <span>Modules: <b>12</b></span>
+            <span>License: <b>MIT (free) · $5 (paid)</b></span>
+          </div>
+
+          <p style="max-width:620px;color:var(--muted);font-size:14.5px;">
+            Hi+OPTIMIZER is a plain‑text batch tool that walks Windows through the same registry, service,
+            and power tweaks a tech‑savvy friend would type by hand — CPU and GPU latency, debloat, disk,
+            wifi, RAM, and more — from one numbered menu, with a restore point offered before anything changes.
+          </p>
+
+          <div class="hero-actions">
+            <a href="https://github.com/soft-daisy/utility" target="_blank" rel="noopener" class="btn solid">Download free — GitHub</a>
+            <a href="https://discord.gg/Dwe9UwzDzS" target="_blank" rel="noopener" class="btn gold">Get PAID — $5</a>
+          </div>
+
+          <p class="hero-prompt">OPTION:<span class="cursor"></span></p>
+          <p class="hero-note"><span class="warn">⚠</span> Modifies registry and service settings. Create a restore point first — Hi+OPTIMIZER will offer to make one for you.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= INTERACTIVE MENU DEMO ================= -->
+  <section class="section" id="demo">
+    <div class="wrap">
+      <div class="eyebrow">// 01 · Live preview</div>
+      <h2 class="sec-title">This is the actual menu. Click through it.</h2>
+      <p class="sec-lede">Every option below mirrors what opens on your machine after you run Hi+OPTIMIZER — same numbering, same color per module, same warnings. Paid‑only modules are marked.</p>
+
+      <div class="term" style="margin-top:36px;">
+        <div class="term-bar">
+          <span>Administrator: Hi+OPTIMIZER V6 (PAID)</span>
+          <div class="dots"><span></span><span></span><span></span></div>
+        </div>
+        <div class="demo-grid">
+          <div class="menu-col">
+            <ul class="menu-list" id="menuList"></ul>
+          </div>
+          <div class="output-col" id="outputCol"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FEATURE GRID ================= -->
+  <section class="section" id="modules">
+    <div class="bg-fade"></div>
+    <div class="wrap">
+      <div class="eyebrow">// 02 · What's inside</div>
+      <h2 class="sec-title">Twelve modules. Nothing you can't read before you run it.</h2>
+      <p class="sec-lede">Every module is plain batch and registry commands — open the .bat in Notepad and see exactly what runs before you approve it.</p>
+
+      <div class="feat-grid" id="featGrid"></div>
+    </div>
+  </section>
+
+  <!-- ================= SAFETY ================= -->
+  <section class="section" id="safety">
+    <div class="wrap">
+      <div class="eyebrow">// 03 · Before you run it</div>
+      <h2 class="sec-title">A tweak tool should ask before it changes anything.</h2>
+      <p class="sec-lede">Hi+OPTIMIZER opens with two prompts every single run — this is not optional, and it's not buried in a settings menu.</p>
+
+      <div class="safety">
+        <div class="safety-card">
+          <div class="k">01 · Restore point</div>
+          <p>The first prompt on launch offers a System Restore checkpoint tagged "HI+OptimizerRestorePoint" — one keystroke to undo the whole session later.</p>
+        </div>
+        <div class="safety-card">
+          <div class="k">02 · Registry backup</div>
+          <p>Second prompt exports HKLM, HKCU, and HKCR to <code>C:\RegistryBackup</code> before any module touches the registry.</p>
+        </div>
+        <div class="safety-card">
+          <div class="k">03 · Every disable, reversible</div>
+          <p>Each "Disable" service module ships with a matching "Re‑enable" option in the same menu — nothing is a one‑way door.</p>
+        </div>
+      </div>
+
+      <div class="callout">
+        <span class="mark">▸</span>
+        <div><b>CPU &amp; GPU modules ship two intensities:</b> Safe applies conservative registry and power‑plan changes; Extreme disables more power‑saving states for the last bit of latency. Hi+OPTIMIZER tells you the trade‑off — cooling matters more on Extreme — before you pick.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PRICING ================= -->
+  <section class="section" id="pricing">
+    <div class="bg-fade"></div>
+    <div class="wrap">
+      <div class="eyebrow">// 04 · Get Hi+OPTIMIZER</div>
+      <h2 class="sec-title">The free build covers the basics. Paid is 10x more tool.</h2>
+      <p class="sec-lede">Free ships the 8 core modules below with the standard tweak set. Paid unlocks every module — including Disk, Game Booster, and Power — and applies a far deeper pass within each one.</p>
+
+      <div class="price-grid">
+        <div class="price-card">
+          <p class="price-name">Hi+OPTIMIZER FREE</p>
+          <p class="price-tag">Open source · GitHub</p>
+          <p class="price-cost">$0</p>
+          <ul class="price-list">
+            <li><span class="mk">✓</span> CPU, GPU, RAM &amp; Internet/Network modules</li>
+            <li><span class="mk">✓</span> Latency Tweaks &amp; System/Perf Tweaks</li>
+            <li><span class="mk">✓</span> Debloat Windows &amp; Services</li>
+            <li><span class="mk">✓</span> Wifi Fix</li>
+            <li><span class="mk">✓</span> Full .bat source, readable line by line</li>
+            <li><span class="mk">✓</span> Restore point + registry backup prompts</li>
+            <li class="off"><span class="mk">–</span> Disk Tweaks, Game Booster, Power Tweaks</li>
+            <li class="off"><span class="mk">–</span> The deeper tweak pass paid runs per module</li>
+          </ul>
+          <a href="https://github.com/soft-daisy/utility" target="_blank" rel="noopener" class="btn" style="justify-content:center;">Clone on GitHub</a>
+        </div>
+
+        <div class="price-card paid">
+          <span class="ribbon">10x deeper</span>
+          <p class="price-name">Hi+OPTIMIZER PAID</p>
+          <p class="price-tag">One‑time purchase · lifetime updates &amp; support</p>
+          <p class="price-cost">$5 <span>/ once</span></p>
+          <ul class="price-list">
+            <li><span class="mk">✓</span> Everything in Free, tuned far more aggressively</li>
+            <li><span class="mk">✓</span> Disk Tweaks (SSD/HDD)</li>
+            <li><span class="mk">✓</span> Game Booster module</li>
+            <li><span class="mk">✓</span> Power Tweaks (Ultimate power plan, sleep/hibernation)</li>
+            <li><span class="mk">✓</span> Lifetime updates</li>
+            <li><span class="mk">✓</span> Support warranty — DM us if anything breaks</li>
+            <li><span class="mk">✓</span> Personalized "Purchased by" header on launch</li>
+          </ul>
+          <a href="https://discord.gg/Dwe9UwzDzS" target="_blank" rel="noopener" class="btn gold" style="justify-content:center;">Buy PAID — $5</a>
+          <p style="font-family:var(--font-mono);font-size:11.5px;color:var(--muted);margin-top:12px;text-align:center;">
+            To buy: message <b style="color:var(--white);">@softdaisy67</b> on
+            <a href="https://www.tiktok.com/@softdaisy67" target="_blank" rel="noopener" style="color:var(--gold);">TikTok</a> or
+            <a href="https://discord.gg/Dwe9UwzDzS" target="_blank" rel="noopener" style="color:var(--gold);">Discord</a> —
+            or buy directly inside the Discord server, where the steps are pinned.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FAQ ================= -->
+  <section class="section" id="faq">
+    <div class="wrap">
+      <div class="eyebrow">// 05 · Questions</div>
+      <h2 class="sec-title">Before you run anything as Administrator</h2>
+
+      <div class="faq">
+        <details class="faq-item" open>
+          <summary>Is this safe to run on a laptop?</summary>
+          <p>Most modules are fine. The Power Tweaks module specifically disables sleep, hibernation, and fast startup, and is flagged "not recommended for laptops" in the tool itself — skip that one on battery‑powered devices.</p>
+        </details>
+        <details class="faq-item">
+          <summary>What's the actual difference between Free and Paid?</summary>
+          <p>Free covers 8 core modules — CPU, GPU, RAM, Internet/Network, Latency, System/Perf, Debloat, and Wifi Fix — with the standard tweak set. Paid unlocks Disk Tweaks, Game Booster, and Power Tweaks on top, and runs a noticeably deeper pass within every module — around 10x more tweaks applied overall. It also comes with lifetime updates and a support warranty.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Can I undo everything afterward?</summary>
+          <p>Yes — restore the System Restore checkpoint from launch, or re‑import the .reg backups from <code>C:\RegistryBackup</code>. Any "Disable" module also has a matching "Re‑enable" entry in the same menu.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Does it need an internet connection?</summary>
+          <p>No — every module runs local registry, service, and power‑plan commands. Nothing is downloaded or phoned home.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="#top" class="brand" style="margin-bottom:14px;display:inline-flex;"><span class="plus">Hi+</span>OPTIMIZER</a>
+        <p>A batch‑script Windows tuning menu made by SOFT DAISY®. Modifies registry and service settings — always start from a restore point.</p>
+      </div>
+      <div class="foot-links">
+        <div class="foot-col">
+          <h4>Product</h4>
+          <a href="#demo">Try the menu</a>
+          <a href="#modules">Modules</a>
+          <a href="#pricing">Pricing</a>
+        </div>
+        <div class="foot-col">
+          <h4>Get it</h4>
+          <a href="https://github.com/soft-daisy/utility" target="_blank" rel="noopener">GitHub (Free)</a>
+          <a href="https://discord.gg/Dwe9UwzDzS" target="_blank" rel="noopener">Buy PAID — $5</a>
+          <a href="#faq">FAQ</a>
+        </div>
+        <div class="foot-col">
+          <h4>Follow &amp; support</h4>
+          <a href="https://discord.gg/Dwe9UwzDzS" target="_blank" rel="noopener">Discord server</a>
+          <a href="https://www.tiktok.com/@softdaisy67" target="_blank" rel="noopener">TikTok — @softdaisy67</a>
+          <a href="https://github.com/soft-daisy/utility" target="_blank" rel="noopener">Report an issue</a>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 SOFT DAISY® — Hi+OPTIMIZER V6</span>
+      <span>Use at your own risk. Not affiliated with Microsoft.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ---------- boot sequence ----------
+  var boot = document.getElementById('boot');
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(boot && !reduce){
+    setTimeout(function(){ boot.classList.add('hide'); }, 1500);
+    setTimeout(function(){ boot.style.display='none'; }, 2100);
+  } else if(boot){
+    boot.style.display='none';
+  }
+
+  // ---------- menu + output data ----------
+  var MODULES = [
+    { n:1, name:'CPU', color:'#6f8dff', free:true,
+      desc:'Enables perf features via registry and optimizes for higher FPS and sustained performance. Two intensities: Safe and Extreme. Paid runs a deeper tweak set on top.',
+      log:[ '[ok] Detecting CPU vendor... Intel', '[ok] Applying Safe profile', '[flag] Extreme profile could raise temps on poor cooling' ] },
+    { n:2, name:'GPU', color:'#5fe3ea', free:true,
+      desc:'GPU optimization for better performance and smoother gameplay across NVIDIA, AMD, and Intel graphics. Paid adds extra driver‑level tweaks.',
+      log:[ '[ok] Detecting GPU... NVIDIA', '[ok] Disabling background telemetry services', '[ok] Applying scheduler priority tweak' ] },
+    { n:3, name:'Debloat Windows', color:'#39ff6a', free:true,
+      desc:'Strips telemetry and preinstalled bloatware. These features take time to run — expect a longer pass than the other modules.',
+      log:[ '[ok] Removing telemetry tasks', '[ok] Uninstalling default bloat packages', '[ok] 41 packages removed' ] },
+    { n:4, name:'Services', color:'#e8dfa0', free:true,
+      desc:'Disable or re‑enable Windows services in bulk — all services, non‑essential only, Windows Update, remote access, print, Bluetooth, or Wi‑Fi.',
+      log:[ '[ok] Disabling non‑essential services and tasks', '[flag] Some features may be unavailable until re‑enabled' ] },
+    { n:5, name:'Network', color:'#5fe3ea', free:true,
+      desc:'Resets adapters, flushes ARP/DNS caches, and clears routing tables for a clean internet connection.',
+      log:[ '[ok] netsh winsock reset', '[ok] ipconfig /release && /renew', '[ok] Adapter cycle complete' ] },
+    { n:6, name:'RAM', color:'#39ff6a', free:true,
+      desc:'Trims memory‑hungry background processes and adjusts paging behavior for more headroom.',
+      log:[ '[ok] Clearing standby memory list', '[ok] Adjusting page file strategy' ] },
+    { n:7, name:'Latency Tweaks', color:'#6f8dff', free:true,
+      desc:'Registry‑level timer resolution and interrupt tweaks aimed at input and network latency.',
+      log:[ '[ok] Setting timer resolution', '[ok] Disabling network throttling index' ] },
+    { n:8, name:'System / Perf Tweaks', color:'#39ff6a', free:true,
+      desc:'Broad Windows performance settings — visual effects, background app limits, and startup trimming.',
+      log:[ '[ok] Setting visual effects to Best Performance', '[ok] Trimming startup entries' ] },
+    { n:9, name:'Wifi Fix', color:'#d7dcd6', free:true,
+      desc:'Restarts and reconfigures the Wlan Auto Config service when Wi‑Fi silently stops reconnecting.',
+      log:[ '[SC] ChangeServiceConfig SUCCESS', 'Wlan Auto Config started successfully.' ] },
+    { n:10, name:'Disk Tweaks', color:'#eef4ee', free:false,
+      desc:'SSD or HDD specific tuning — not recommended for newer‑generation SSDs, which self‑manage most of this already. Paid only.',
+      log:[ '[flag] Disk Tweaks: PAID module', '[ok] fsutil behavior set disableLastAccess 0', '[ok] Storage idle‑state power tuning applied' ] },
+    { n:11, name:'Game Booster', color:'#d9ac3d', free:false,
+      desc:'One‑shot pass that trims background load right before you launch a game, with per‑title profiles. Paid only.',
+      log:[ '[flag] Game Booster: PAID module', '[ok] Suspending non‑essential background apps' ] },
+    { n:12, name:'Power Tweaks', color:'#d9ac3d', free:false,
+      desc:'Enables an Ultimate Performance power plan and disables sleep, hibernation, and fast startup. Not recommended for laptops. Paid only.',
+      log:[ '[flag] Power Tweaks: PAID module', '[ok] Enabling ULTIMATE power plan', '[flag] NOT RECOMMENDED FOR LAPTOPS' ] }
+  ];
+
+  var menuList = document.getElementById('menuList');
+  var outputCol = document.getElementById('outputCol');
+
+  MODULES.forEach(function(m, i){
+    var li = document.createElement('li');
+    var badge = m.free ? '' : '<span class="tag" style="margin-left:auto;font-size:9px;padding:2px 6px;">PAID</span>';
+    li.innerHTML = '<span class="num">['+m.n+']</span> ' + m.name + badge;
+    li.style.display = 'flex';
+    li.dataset.index = i;
+    if(i === 0) li.classList.add('active');
+    li.addEventListener('click', function(){
+      document.querySelectorAll('#menuList li').forEach(function(el){ el.classList.remove('active'); });
+      li.classList.add('active');
+      render(i);
+    });
+    menuList.appendChild(li);
+  });
+
+  function render(i){
+    var m = MODULES[i];
+    var logHtml = m.log.map(function(l){
+      var cls = l.indexOf('[flag]') === 0 ? 'flag' : (l.indexOf('[ok]') === 0 || l.indexOf('[SC]') === 0 ? 'ok' : '');
+      return '<div class="'+cls+'">'+l+'</div>';
+    }).join('');
+    outputCol.innerHTML =
+      '<h3 class="output-head" style="color:'+m.color+'">['+m.n+'] '+m.name+'</h3>' +
+      '<p class="output-desc">'+m.desc+'</p>' +
+      '<div class="output-log">'+logHtml+'</div>' +
+      '<div class="tag-row"><span class="tag">Module 0'+(m.n<10?'0'+m.n:m.n)+'</span><span class="tag">'+(m.free?'Free':'Paid only')+'</span><span class="tag">Reversible</span><span class="tag">Registry + Services</span></div>';
+  }
+  render(0);
+
+  // ---------- feature grid ----------
+  var featGrid = document.getElementById('featGrid');
+  MODULES.forEach(function(m){
+    var d = document.createElement('div');
+    d.className = 'feat';
+    d.style.setProperty('--c', m.color);
+    d.innerHTML =
+      '<div class="idx" style="display:flex;justify-content:space-between;">MODULE 0'+(m.n<10?'0'+m.n:m.n)+'<span style="color:'+(m.free?'var(--green)':'var(--gold)')+'">'+(m.free?'FREE':'PAID')+'</span></div>' +
+      '<h3>'+m.name+'</h3>' +
+      '<p>'+m.desc+'</p>';
+    featGrid.appendChild(d);
+  });
+</script>
+
+</body>
+</html>
