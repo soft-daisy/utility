@@ -55,10 +55,12 @@ Different Windows versions and hardware configurations can behave differently.
 📦 How to use
 
 1. Download the latest Hi Optimizer release.
-2. Run it as Administrator.
-3. Choose the optimization section you want.
-4. Select the tweaks you want to apply.
-5. Restart Windows when requested.
+2. Or Download via this link https://github.com/soft-daisy/utility/releases/tag/V6.0-Beta
+  
+3. Run it as Administrator.
+4. Choose the optimization section you want.
+5. Select the tweaks you want to apply.
+6. Restart Windows when requested.
 
 A restore point is recommended before making major changes.
 
