@@ -4,7 +4,7 @@ A powerful Windows 10/11 optimization script focused on performance, debloating,
 Links 🖇️
 
 Website:
-https://soft-daisy.github.io/utility/
+https://hioptimizer.github.io/website/
 
 Discord:
 https://discord.gg/Dwe9UwzDzS
