@@ -10,7 +10,7 @@ Discord:
 https://discord.gg/Dwe9UwzDzS
 
 TikTok:
-https://www.tiktok.com/@softdaisy67?_r=1&_t=ZS-99KYyHHsuWo
+https://www.tiktok.com/@softdaisy67
 
 About 🫶
 
