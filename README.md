@@ -1,7 +1,7 @@
 # Hi-Optimizer 🔥
 A powerful Windows 10/11 optimization script focused on performance, debloating, gaming, memory optimization, and system tuning.
 
-Links 🖇️
+# Links 🖇️
 
 Website:
 https://hioptimizer.github.io/website/
@@ -18,7 +18,7 @@ It's a lightweight Windows optimizer built to improve system responsiveness, red
 
 I originally started making this because I wanted Windows to feel faster on older hardware without having to manually change hundreds of settings every time.
 
-⚡ What it does
+# ⚡ What it does
 
 Hi Optimizer includes different optimization sections for:
 
@@ -36,13 +36,13 @@ Hi Optimizer includes different optimization sections for:
 
 The optimizer contains different options for different hardware and Windows configurations, so you can choose what you actually want to apply.
 
-🖥️ Designed for older PCs
+# 🖥️ Designed for older PCs
 
 This Windows Optimizer was made with low-end hardware in mind.
 
 It has been developed on i5 and tested on an older AMD E-450 system, so the goal isn't to throw unnecessary features into the optimizer — it's to make Windows feel lighter and more responsive.
 
-⚠️ Important
+# ⚠️ Important
 
 Some tweaks modify Windows services, registry settings, networking configuration, and other system components.
 
@@ -52,7 +52,7 @@ Some options are intended for experienced users. If you don't know what a partic
 
 Different Windows versions and hardware configurations can behave differently.
 
-📦 How to use
+# 📦 How to use
 
 1. Download the latest Hi Optimizer release.
 2. Or Download via this link https://github.com/soft-daisy/utility/releases/tag/V6.0-Beta
@@ -64,7 +64,7 @@ Different Windows versions and hardware configurations can behave differently.
 
 A restore point is recommended before making major changes.
 
-🎯 Why I made it
+# 🎯 Why I made it
 
 I wanted a simple optimizer that I could use on my own PC without needing a huge application running in the background.
 
@@ -72,7 +72,7 @@ Hi Optimizer started as a collection of small batch tweaks and gradually grew in
 
 I'm still improving it and adding new tweaks over time.
 
-🧪 Supported Windows versions
+# 🧪 Supported Windows versions
 
 The optimizer is primarily intended for:
 
@@ -81,7 +81,7 @@ The optimizer is primarily intended for:
 
 Older Windows versions may work with some features, but compatibility can vary.
 
-⚠️ Disclaimer
+# ⚠️ Disclaimer
 
 Use this software at your own risk.
 
@@ -91,17 +91,17 @@ I am not responsible for data loss, system instability, broken Windows component
 
 Always keep a backup of important files before modifying your system.
 
-Who can use it ✅
+# Who can use it ✅
 
 Made for people who want their Windows PC to feel lighter, faster, and less cluttered.
 
-Support us 🩶
+# Support us 🩶
 
 ⭐ If you find it useful, consider giving the repository a star.
 
-License 🫪
+# License 🫪
 
-Copyright © 2026 Taqi Abbas.
+Copyright © 2026 Soft Daisy.
 All rights reserved.
 You can use Hi Optimizer for personal use. 
 
