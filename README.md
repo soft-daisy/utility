@@ -13,6 +13,7 @@ TikTok:
 https://www.tiktok.com/@softdaisy67?_r=1&_t=ZS-99KYyHHsuWo
 
 About 🫶
+
 It's a lightweight Windows optimizer built to improve system responsiveness, reduce unnecessary background activity, and give you more control over Windows.
 
 I originally started making this because I wanted Windows to feel faster on older hardware without having to manually change hundreds of settings every time.
@@ -88,12 +89,16 @@ I am not responsible for data loss, system instability, broken Windows component
 
 Always keep a backup of important files before modifying your system.
 
-Hi Optimizer
+Who can use it ✅
+
 Made for people who want their Windows PC to feel lighter, faster, and less cluttered.
-#Support us
+
+Support us 🩶
+
 ⭐ If you find it useful, consider giving the repository a star.
 
 License 🫪
+
 Copyright © 2026 Taqi Abbas.
 All rights reserved.
 You can use Hi Optimizer for personal use. 
