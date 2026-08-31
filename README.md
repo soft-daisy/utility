@@ -2,7 +2,16 @@
 A powerful Windows 10/11 optimization script focused on performance, debloating, gaming, memory optimization, and system tuning.
 Hi Optimizer
 
-A lightweight Windows optimizer built to improve system responsiveness, reduce unnecessary background activity, and give you more control over Windows.
+Website:
+https://soft-daisy.github.io/utility/
+
+Discord:
+https://discord.gg/Dwe9UwzDzS
+
+TikTok:
+https://www.tiktok.com/@softdaisy67?_r=1&_t=ZS-99KYyHHsuWo
+
+It's a lightweight Windows optimizer built to improve system responsiveness, reduce unnecessary background activity, and give you more control over Windows.
 
 I originally started making this because I wanted Windows to feel faster on older hardware without having to manually change hundreds of settings every time.
 
@@ -28,7 +37,7 @@ The optimizer contains different options for different hardware and Windows conf
 
 This Windows Optimizer was made with low-end hardware in mind.
 
-It has been developed and tested on an older AMD E-450 system, so the goal isn't to throw unnecessary features into the optimizer — it's to make Windows feel lighter and more responsive.
+It has been developed on i5 and tested on an older AMD E-450 system, so the goal isn't to throw unnecessary features into the optimizer — it's to make Windows feel lighter and more responsive.
 
 ⚠️ Important
 
