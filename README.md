@@ -12,7 +12,7 @@ https://discord.gg/Dwe9UwzDzS
 TikTok:
 https://www.tiktok.com/@softdaisy67
 
-About 🫶
+# About 🫶
 
 It's a lightweight Windows optimizer built to improve system responsiveness, reduce unnecessary background activity, and give you more control over Windows.
 
