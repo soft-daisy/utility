@@ -42,8 +42,6 @@ The optimizer contains different options for different hardware and Windows conf
 
 This Windows Optimizer was made with low-end hardware in mind.
 
-It has been developed on i5 and tested on an older AMD E-450 system, so the goal isn't to throw unnecessary features into the optimizer — it's to make Windows feel lighter and more responsive.
-
 # ⚠️ Important
 
 Some tweaks modify Windows services, registry settings, networking configuration, and other system components.
