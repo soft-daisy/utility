@@ -1,107 +1,154 @@
-# Hi-Optimizer 🔥
-A powerful Windows 10/11 optimization script focused on performance, debloating, gaming, memory optimization, and system tuning.
+<div align="center">⚡ HI+ OPTIMIZER
 
-![Menu](https://github.com/soft-daisy/utility/blob/main/Menu.PNG)
+🗿 Windows optimization without the extra BS.
 
-# Links 🖇️
+Low-end PC? Laggy Windows? Random background crap?
+Hi+ Optimizer is built to squeeze more performance out of Windows 10/11.
 
-Website:
-https://hioptimizer.github.io/website/
+<br>"Windows" (https://img.shields.io/badge/Windows_10%20%7C%2011-0078D6?style=for-the-badge&logo=windows&logoColor=white)
+"Version" (https://img.shields.io/badge/V6-BETA-00C853?style=for-the-badge)
+"License" (https://img.shields.io/badge/License-Personal-111111?style=for-the-badge)
+"Made in Pakistan" (https://img.shields.io/badge/Made%20in-Pakistan-01411C?style=for-the-badge)
 
-Discord:
-https://discord.gg/Dwe9UwzDzS
+<br><img src="https://raw.githubusercontent.com/soft-daisy/utility/main/assets/hi-optimizer.gif" width="850"></div>---
 
-TikTok:
-https://www.tiktok.com/@softdaisy67
+🚀 WHAT IS THIS?
 
-# About 🫶
+Hi+ Optimizer is a lightweight Windows optimization toolkit focused on:
 
-It's a lightweight Windows optimizer built to improve system responsiveness, reduce unnecessary background activity, and give you more control over Windows.
+«⚡ Performance • 🎮 Gaming • 🧹 Debloat • 🕐 Latency • 💾 RAM»
 
-I originally started making this because I wanted Windows to feel faster on older hardware without having to manually change hundreds of settings every time.
+Made especially for low-end / older PCs that Windows loves to bully. 💀
 
-# ⚡ What it does
+No massive optimizer app running 24/7.
 
-Hi Optimizer includes different optimization sections for:
+No 500MB GUI.
 
-- ⚙️ CPU performance
-- 🎮 GPU performance
-- 🧹 Windows debloating
-- 🔧 Services optimization
-- 🌐 Network optimization
+Just tweaks + scripts + performance.
+
+---
+
+🔥 WHAT'S INSIDE?
+
+🧩 Category| ⚡ Tweaks
+🧠 CPU| AMD / Intel optimization
+🎮 GPU| AMD / Intel / NVIDIA tweaks
+💾 RAM| Memory & background optimization
+🌐 Network| TCP / DNS / network tweaks
+🧹 Debloat| Remove unnecessary Windows components
+⚙️ Services| Disable unnecessary services
+🕐 Latency| Input / network / system latency tweaks
+🪟 System| Performance + appearance tweaks
+🛠️ Extras| Advanced system tweaks
+
+---
+
+🧪 BEFORE → AFTER
+
+Test system
+
+AMD E-450 • 6GB RAM • Radeon HD 6320
+
+📊 Metric| 😭 Before| 🗿 After
+RAM Usage| ~2.7 GB| ~921 MB
+CPU Idle| ~3–10%| ~0–3%
+Disk Idle| ~2–5%| ~0%
+Background Processes| High| Reduced
+Gaming| 💀| 🔥
+
+«Results vary depending on Windows build, drivers, hardware and installed apps.»
+
+---
+
+🧪 V6 BETA
+
+HI+ OPTIMIZER V6 — ULTRA MODE 🗿
+
+V6 is focused on making the optimizer faster, cleaner and safer while adding more control over Windows.
+
+✨ What's new?
+
+- ⚡ New optimization tweaks
+- 🧠 Improved CPU optimizations
+- 🎮 Improved GPU tweaks
 - 💾 RAM optimization
+- 🌐 Network optimization
+- 🧹 System debloat
 - 🕐 Latency tweaks
-- ✨ Extra and advanced tweaks
-- 🛠️ System and registry tweaks
-- 🧹 Removing unnecessary Windows components
-- 🚀 Performance-focused configuration
+- 🔧 Registry backup
+- ♻️ Restore Point support
+- 🛠️ More system tweaks
+- 🐛 Bug fixes
+- 🎨 Cleaner interface
+- 📦 Improved Windows compatibility
 
-The optimizer contains different options for different hardware and Windows configurations, so you can choose what you actually want to apply.
+🧪 V6 goal
 
-# 🖥️ Designed for older PCs
+Less background junk → more resources → smoother Windows.
 
-This Windows Optimizer was made with low-end hardware in mind.
+«V6 is currently BETA, so expect bugs.
+If something breaks, restore your backup / restore point instead of blaming the toaster. 💀»
 
-# ⚠️ Important
+---
 
-Some tweaks modify Windows services, registry settings, networking configuration, and other system components.
+🎮 GAMING
 
-Create a System Restore Point before applying advanced tweaks.
+Built for squeezing extra performance from weaker hardware.
 
-Some options are intended for experienced users. If you don't know what a particular tweak does, don't enable it blindly.
+Tested on low-end hardware:
 
-Different Windows versions and hardware configurations can behave differently.
+GTA Vice City → 🟢 40–60 FPS
+Call of Duty 4 → 🟢 45–60 FPS
+Far Cry 2 → 🟢 ~40 FPS
+Assassin's Creed → 🟢 ~25–30 FPS
+NFS Most Wanted 2012 → 🟡 ~15–20 FPS
 
-# 📦 How to use
+«These are example results from specific hardware/configurations, not guaranteed FPS gains.»
 
-1. Download the latest Hi Optimizer release.
-2. Or Download via this link https://github.com/soft-daisy/utility/releases/tag/V6.0-Beta
-  
-3. Run it as Administrator.
-4. Choose the optimization section you want.
-5. Select the tweaks you want to apply.
-6. Restart Windows when requested.
+---
 
-A restore point is recommended before making major changes.
+📦 INSTALL
 
-# 🎯 Why I made it
+Option 1 — Release
 
-I wanted a simple optimizer that I could use on my own PC without needing a huge application running in the background.
+Download the latest release:
 
-Hi Optimizer started as a collection of small batch tweaks and gradually grew into a complete Windows optimization toolkit.
+👉 "GitHub Releases" (https://github.com/soft-daisy/utility/releases)
 
-I'm still improving it and adding new tweaks over time.
+Option 2 — PowerShell
 
-# 🧪 Supported Windows versions
+irm https://raw.githubusercontent.com/soft-daisy/utility/main/install.ps1 | iex
 
-The optimizer is primarily intended for:
+Run as Administrator when required.
 
-- Windows 10
-- Windows 11
+---
 
-Older Windows versions may work with some features, but compatibility can vary.
+⚠️ READ THIS
 
-# ⚠️ Disclaimer
+Hi+ Optimizer modifies Windows settings, registry entries and/or services.
 
-Use this software at your own risk.
+Create a System Restore Point before optimizing.
 
-Windows configurations are different, and a tweak that works well on one PC may not be appropriate for another.
+Don't blindly enable every tweak just because it has a 🔥 emoji next to it. 😭
 
-I am not responsible for data loss, system instability, broken Windows components, or other problems caused by using the optimizer.
+---
 
-Always keep a backup of important files before modifying your system.
+🌐 CONNECT
 
-# Who can use it ✅
+<div align="center">""Website" (https://img.shields.io/badge/🌐%20Website-Hi%20Optimizer-00C853?style=for-the-badge)" (https://hioptimizer.github.io/website/)
+""TikTok" (https://img.shields.io/badge/TikTok-@softdaisy-000000?style=for-the-badge&logo=tiktok)" (https://www.tiktok.com/@softdaisy67)
+""Discord" (https://img.shields.io/badge/Discord-Join%20Server-5865F2?style=for-the-badge&logo=discord&logoColor=white)" (https://discord.gg/Dwe9UwzDzS)
 
-Made for people who want their Windows PC to feel lighter, faster, and less cluttered.
+</div>---
 
-# Support us 🩶
+<div align="center">⭐ LIKE THE PROJECT?
 
-⭐ If you find it useful, consider giving the repository a star.
+Star the repo.
 
-# License 🫪
+It costs literally 0$ and helps a lot. 🗿
 
-Copyright © 2026 Soft Daisy.
-All rights reserved.
-You can use Hi Optimizer for personal use. 
+Made with 💚 by Taqi Abbas / Soft Daisy
 
+Optimize smarter. Game smoother.
+
+</div>
