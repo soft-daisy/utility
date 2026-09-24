@@ -81,7 +81,7 @@ Hi+ touches registry, services & settings.
 
 ### 🌐 connect
 
-[![Website](https://img.shields.io/badge/🌐_Website-Hi_Optimizer-00C853?style=for-the-badge)](https://hioptimizer.github.io/website/)
+[![Website](https://img.shields.io/badge/🌐_Website-Hi+Optimizer-00C853?style=for-the-badge)](https://hioptimizer.github.io/website/)
 [![TikTok](https://img.shields.io/badge/TikTok-@softdaisy-000000?style=for-the-badge&logo=tiktok)](https://www.tiktok.com/@softdaisy67)
 [![Discord](https://img.shields.io/badge/Discord-Join_Server-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/Dwe9UwzDzS)
 
