@@ -5,7 +5,7 @@
 ### your windows is NOT that deep, let's fix it 🗿
 
 ![Windows](https://img.shields.io/badge/Windows_10%20%7C%2011-0078D6?style=for-the-badge&logo=windows&logoColor=white)
-![Version](https://img.shields.io/badge/V6-BETA-00C853?style=for-the-badge)
+![Version](https://img.shields.io/badge/V6-STABLE-00C853?style=for-the-badge)
 ![License](https://img.shields.io/badge/License-Personal-111111?style=for-the-badge)
 ![Stars](https://img.shields.io/github/stars/soft-daisy/utility?style=for-the-badge&color=FFD700)
 
