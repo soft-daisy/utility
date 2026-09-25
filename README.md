@@ -1,7 +1,8 @@
 <div align="center">
 
 # ⚡ HI+ OPTIMIZER
-[Bannar]https://github.com/soft-daisy/utility/blob/main/Pictures/Bannar.svg
+![Bannar](Bannar.svg)
+
 
 ### your windows is NOT that deep, let's fix it 🗿
 
